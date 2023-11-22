@@ -1,0 +1,8 @@
+numpy
+scipy
+pandas
+matplotlib
+seaborn
+pickle5
+sklearn
+argparse
