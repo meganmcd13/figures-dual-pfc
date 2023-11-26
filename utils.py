@@ -1,6 +1,7 @@
 # imports
 import pickle5 as pickle
 import numpy as np
+from collections.abc import Iterable
 
 color_map = {
     'across':np.array([255,76,178])/255, # pink
@@ -66,3 +67,18 @@ def plot_raster(X,ax):
         for i_time in range(num_timepoints):
             if X[i_neuron,i_time] == 1:
                 ax.plot([i_time,i_time], [i_neuron,i_neuron+1],'-k',linewidth=0.3)
+
+# load dictionary using pickle
+def load_dict(filename):
+    with open(filename, 'rb') as handle:
+        data = handle.read()
+    # reconstructing the data as dictionary
+    return pickle.loads(data)
+
+# flatten a list of lists:
+def flatten(xs):
+    for x in xs:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            yield from flatten(x)
+        else:
+            yield x
