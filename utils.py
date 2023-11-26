@@ -2,6 +2,7 @@
 import pickle5 as pickle
 import numpy as np
 from collections.abc import Iterable
+import counts_analysis as cp
 
 color_map = {
     'across':np.array([255,76,178])/255, # pink
@@ -82,3 +83,24 @@ def flatten(xs):
             yield from flatten(x)
         else:
             yield x
+
+# extract pCCA-FA model parameters
+def extract_mdl_params(fit_dat):
+    tmp = fit_dat['params'].item()
+    param_dict={x:tmp[x].item() for x,y in tmp.dtype.fields.items()}
+    param_dict['mu_x'] = param_dict['mu_x'].flatten()
+    param_dict['mu_y'] = param_dict['mu_y'].flatten()
+    param_dict['psi_x'] = param_dict['psi_x'].flatten()
+    param_dict['psi_y'] = param_dict['psi_y'].flatten()
+    param_dict['zDim'] = int(param_dict['zDim'])
+    param_dict['zxDim'] = int(param_dict['zxDim'])
+    param_dict['zyDim'] = int(param_dict['zyDim'])
+    return param_dict
+
+# preprocess spike counts to remove condition means and auto regressive prediction
+def preprocess_counts(counts,targ_angs,binsize,ar_order):
+    sc_obj1 = cp.counts_analysis(counts,targ_angs,binsize)
+    cond_means = sc_obj1.compute_cond_means()
+    sc_obj2 = cp.counts_analysis(sc_obj1.rm_cond_means(),targ_angs,binsize)
+    _,ar_est = sc_obj2.rm_autoreg(order=ar_order,auto_type='mean',fa_remove=True,fa_dims=15)
+    return sc_obj1.rm_cond_means(), ar_est, cond_means
