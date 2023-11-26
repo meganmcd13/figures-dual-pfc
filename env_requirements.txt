@@ -1,8 +1,7 @@
 numpy
 scipy
 pandas
-matplotlib
-seaborn
+matplotlib>=3.4
 pickle5
-sklearn
-argparse
+scikit-learn
+psutil
