@@ -54,3 +54,15 @@ def compute_rsc_across_pccafa(Sigma_full,xDim):
         rsc = sig_ij / np.sqrt(sig_ii * sig_jj)
         rscs = np.append(rscs, rsc)
     return rscs
+
+# plot a raster on given ax
+def plot_raster(X,ax):
+    # assumes you have already called subplot on the figure that you want
+    # X: (num_neurons, num_timepoints)
+    X = np.flipud(X)
+    num_neurons = X.shape[0]
+    num_timepoints = X.shape[1]
+    for i_neuron in range(num_neurons):
+        for i_time in range(num_timepoints):
+            if X[i_neuron,i_time] == 1:
+                ax.plot([i_time,i_time], [i_neuron,i_neuron+1],'-k',linewidth=0.3)
