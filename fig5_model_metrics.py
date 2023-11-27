@@ -77,3 +77,4 @@ pdf.savefig(fig)
 pdf.close()
 
 print('finished saving Figure 5 plots')
+print('- - - - - - - - - - - - - - - -')
