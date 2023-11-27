@@ -1,35 +1,6 @@
-# imports
-import numpy as np
-import os, sys
-import pandas as pd
-import scipy.stats as stats
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
-plt.style.use('scifigs.mplstyle')
-
-# make figure directory
-FIGURE_PATH = '../pcca_fa_figures_output/'
-if not os.path.isdir(FIGURE_PATH):
-    os.makedirs(FIGURE_PATH, exist_ok=True)
-    print("created figure output folder : ", FIGURE_PATH)
-
-# params and helper functions
-with open("utils.py") as f:
-    exec(f.read())
-# plotting colors
-area1 = color_map['within1']
-area2 = color_map['within2']
-acrossarea = color_map['across']
-indep = color_map['independent']
-
-# paths
-PCCAFA_PATH = '/afs/ece.cmu.edu/project/nspg/mmcdonne/general_code/pcca_fa'
-sys.path.append(PCCAFA_PATH)
-
-import pcca_fa_mdl as pf
-
 # load first set of simulations comparing pCCA-FA to ground truth 
 zDim_pairs = ((1,5),(2,4),(3,3),(4,2),(5,1)) # first entry is global dim, second entry is local dim
+n_boots = 30
 dat = load_dict('data/recover_dims_pccaFa_sv25.pkl')
 
 # compute ground truth metrics

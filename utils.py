@@ -1,23 +1,13 @@
-# imports
-import pickle5 as pickle
-import numpy as np
-from collections.abc import Iterable
-import counts_analysis as cp
-
-color_map = {
-    'across':np.array([255,76,178])/255, # pink
-    'within1':np.array([111,192,255])/255, # light blue - right hemisphere
-    'within2':np.array([0,87,154])/255, # dark blue - left hemisphere
-    'within':np.array([0,144,255])/255, # medium blue - collapsed across both hemispheres
-    'independent':np.array([200,200,200])/255 # gray
-}
+# utilities
 
 def jitter(length=1):
+    import numpy as np
     spacing = 0.2
     return np.random.uniform(low=-spacing,high=spacing,size=length)
 
 # compute within area rsc for full (multiarea) covariance matrix
 def compute_rsc_within_pccafa(Sigma_full, xDim):
+    import numpy as np
     # Sigma is xDim+yDim x xDim+yDim
     Sigma_x = Sigma_full[:xDim,:xDim]
     Sigma_y = Sigma_full[xDim:,xDim:]
@@ -42,6 +32,7 @@ def compute_rsc_within_pccafa(Sigma_full, xDim):
 
 # compute across area rsc for full (multiarea) covariance matrix
 def compute_rsc_across_pccafa(Sigma_full,xDim):
+    import numpy as np
     # Sigma is xDim+yDim x xDim+yDim
     yDim = Sigma_full.shape[0] - xDim
     Sigma = Sigma_full[xDim:,:xDim] # get neurons from opposite regions
@@ -59,6 +50,7 @@ def compute_rsc_across_pccafa(Sigma_full,xDim):
 
 # plot a raster on given ax
 def plot_raster(X,ax):
+    import numpy as np
     # assumes you have already called subplot on the figure that you want
     # X: (num_neurons, num_timepoints)
     X = np.flipud(X)
@@ -71,6 +63,7 @@ def plot_raster(X,ax):
 
 # load dictionary using pickle
 def load_dict(filename):
+    import pickle5 as pickle
     with open(filename, 'rb') as handle:
         data = handle.read()
     # reconstructing the data as dictionary
@@ -78,6 +71,7 @@ def load_dict(filename):
 
 # flatten a list of lists:
 def flatten(xs):
+    from collections.abc import Iterable
     for x in xs:
         if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
             yield from flatten(x)
@@ -99,6 +93,7 @@ def extract_mdl_params(fit_dat):
 
 # preprocess spike counts to remove condition means and auto regressive prediction
 def preprocess_counts(counts,targ_angs,binsize,ar_order):
+    import counts_analysis as cp
     sc_obj1 = cp.counts_analysis(counts,targ_angs,binsize)
     cond_means = sc_obj1.compute_cond_means()
     sc_obj2 = cp.counts_analysis(sc_obj1.rm_cond_means(),targ_angs,binsize)

@@ -1,28 +1,3 @@
-# imports
-import numpy as np
-import os
-import pandas as pd
-import scipy.linalg as slin
-from scipy.spatial.distance import pdist, squareform
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
-plt.style.use('scifigs.mplstyle')
-
-# make figure directory
-FIGURE_PATH = '../pcca_fa_figures_output/'
-if not os.path.isdir(FIGURE_PATH):
-    os.makedirs(FIGURE_PATH, exist_ok=True)
-    print("created figure output folder : ", FIGURE_PATH)
-
-# params and helper functions
-with open("utils.py") as f:
-    exec(f.read())
-# plotting colors
-area1 = color_map['within1']
-area2 = color_map['within2']
-acrossarea = color_map['across']
-indep = color_map['independent']
-
 # random seed
 np.random.seed(0)
 
