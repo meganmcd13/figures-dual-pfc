@@ -4,7 +4,6 @@ sub_cols = ('k','k','k')
 marks = ('o','s','^')
             
 # load data and get params
-slow_pupil_dat = load_dict("data/slow_pupil_latents.txt")
 fast_pupil_dat = load_dict("data/fast_pupil_latents.txt")
 
 # compute r2 values
