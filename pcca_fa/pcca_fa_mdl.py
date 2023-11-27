@@ -3,7 +3,6 @@ import prob_cca as pcca
 import factor_analysis as fa_mdl
 import scipy.linalg as slin
 import sklearn.model_selection as ms
-import counts_analysis as cp
 from joblib import Parallel,delayed
 from functools import partial
 from psutil import cpu_count
