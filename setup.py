@@ -6,6 +6,8 @@ import scipy.linalg as slin
 import scipy.stats as stats
 import scipy.io as sio
 from scipy.spatial.distance import pdist, squareform
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 plt.style.use('scifigs.mplstyle')
@@ -50,8 +52,8 @@ FIGURE2 = False
 FIGURE3 = False
 FIGURE4 = False
 FIGURE5 = False
-FIGURE6 = True
-FIGURE7 = False
+FIGURE6 = False
+FIGURE7 = True
 
 # run figures
 if FIGURE1:
