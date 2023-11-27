@@ -99,3 +99,40 @@ def preprocess_counts(counts,targ_angs,binsize,ar_order):
     sc_obj2 = cp.counts_analysis(sc_obj1.rm_cond_means(),targ_angs,binsize)
     _,ar_est = sc_obj2.rm_autoreg(order=ar_order,auto_type='mean',fa_remove=True,fa_dims=15)
     return sc_obj1.rm_cond_means(), ar_est, cond_means
+
+# function for plotting figure 5
+def plot_metric(dat,sub,ax,col,sym,metric='psv'):
+    import numpy as np
+    import pcca_fa_mdl as pf
+    if sym=='o':
+        jit = -0.1
+    elif sym=='s':
+        jit = 0
+    else:
+        jit = 0.1
+    # loop through each session
+    sess_names = [k for k,v in dat.items() if k.lower().startswith(sub)]
+    psv_x,psv_y = np.zeros(len(sess_names)),np.zeros(len(sess_names))
+    psv_priv_x,psv_priv_y = np.zeros(len(sess_names)),np.zeros(len(sess_names))
+    for i,sess in enumerate(sess_names):
+        mdl_params = extract_mdl_params(dat[sess])            
+        pf_mdl = pf.pcca_fa()
+        pf_mdl.set_params(mdl_params)
+        fit_metrics = pf_mdl.compute_metrics()[metric]
+        psv_x[i],psv_y[i] = fit_metrics[metric+'_x'],fit_metrics[metric+'_y']
+        psv_priv_x[i],psv_priv_y[i] = fit_metrics[metric+'_priv_x'],fit_metrics[metric+'_priv_y']
+    psv_within = np.concatenate((psv_priv_x,psv_priv_y))
+    psv_across = np.concatenate((psv_x,psv_y))
+    if metric=='dshared':
+        count_dict = dict()
+        for i in range(len(psv_within)):
+            tmp = (psv_within[i],psv_across[i])
+            if tmp not in count_dict:
+                count_dict[tmp] = 1
+            else:
+                count_dict[tmp] += 1
+        for t in count_dict:
+            ax.plot(t[0]+jit,t[1]+jit,marker=sym,ls='',color=col,markersize=2+1.5*count_dict[t],fillstyle='none')
+    else:
+        ax.plot(psv_within,psv_across,marker=sym,ls='',color=col,label='subject {:s}'.format(sess_names[0][0:2]),markersize=5,fillstyle='none')
+    return psv_within,psv_across

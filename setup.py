@@ -35,20 +35,21 @@ color_map = {
     'independent':np.array([200,200,200])/255 # gray
 }
 # plotting colors
+within = color_map['within']
 area1 = color_map['within1']
 area2 = color_map['within2']
 acrossarea = color_map['across']
 indep = color_map['independent']
 
 # create utils, params and helper functions
-from utils import jitter, compute_rsc_within_pccafa, compute_rsc_across_pccafa, plot_raster, load_dict, flatten, extract_mdl_params, preprocess_counts
+from utils import jitter, compute_rsc_within_pccafa, compute_rsc_across_pccafa, plot_raster, load_dict, flatten, extract_mdl_params, preprocess_counts, plot_metric
 
 # set which figures to create:
 FIGURE1 = False
 FIGURE2 = False
-FIGURE3 = True
+FIGURE3 = False
 FIGURE4 = True
-FIGURE5 = False
+FIGURE5 = True
 FIGURE6 = False
 FIGURE7 = False
 
