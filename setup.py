@@ -42,15 +42,15 @@ acrossarea = color_map['across']
 indep = color_map['independent']
 
 # create utils, params and helper functions
-from utils import jitter, compute_rsc_within_pccafa, compute_rsc_across_pccafa, plot_raster, load_dict, flatten, extract_mdl_params, preprocess_counts, plot_metric
+from utils import jitter, compute_rsc_within_pccafa, compute_rsc_across_pccafa, plot_raster, load_dict, flatten, extract_mdl_params, preprocess_counts, plot_metric, get_top_angles, get_top_vec
 
 # set which figures to create:
 FIGURE1 = False
 FIGURE2 = False
 FIGURE3 = False
-FIGURE4 = True
-FIGURE5 = True
-FIGURE6 = False
+FIGURE4 = False
+FIGURE5 = False
+FIGURE6 = True
 FIGURE7 = False
 
 # run figures

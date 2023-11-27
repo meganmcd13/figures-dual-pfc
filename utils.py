@@ -136,3 +136,80 @@ def plot_metric(dat,sub,ax,col,sym,metric='psv'):
     else:
         ax.plot(psv_within,psv_across,marker=sym,ls='',color=col,label='subject {:s}'.format(sess_names[0][0:2]),markersize=5,fillstyle='none')
     return psv_within,psv_across
+
+# principal angles:
+def prinangle(A, B):
+    import scipy.linalg as slin
+    import math
+    import numpy as np
+    # check for 1d vector, ie: shape = (43,)
+    if A.ndim == 1:
+        A = A.reshape((len(A),1))
+    if B.ndim == 1:
+        B = B.reshape((len(B),1))
+    A_orth = slin.orth(A)
+    B_orth = slin.orth(B)
+    [_, sv, _] = slin.svd(np.transpose(A_orth) @ B_orth)
+    for i, val in enumerate(sv):
+        if math.isclose(1, val, abs_tol=1e-5):
+            sv[i] = 1 # prevent domain errors in acos
+    pa = list(map(lambda x: math.acos(x) * 180 / math.pi, sv))
+    return pa
+
+# function for calculating top angle between global and local dimensions - megan
+def get_top_angles(params_list, metric=None):
+    import numpy as np
+    import scipy.linalg as slin
+    from utils import prinangle
+    x_angles_list, y_angles_list = [], []
+    sv_wx_list, sv_wy_list, sv_lx_list, sv_ly_list = [], [], [], []
+    for params in params_list:
+        wx = params['W_x']
+        wy = params['W_y']
+        lx = params['L_x']
+        ly = params['L_y']
+        psix = params['psi_x']
+        psiy = params['psi_y']
+
+        wwt_x = wx @ wx.T
+        llt_x = lx @ lx.T
+        wwt_y = wy @ wy.T
+        llt_y = ly @ ly.T
+
+        uwx,swx,_ = slin.svd(wwt_x)
+        ulx,slx,_ = slin.svd(llt_x)
+        uwy,swy,_ = slin.svd(wwt_y)
+        uly,sly,_ = slin.svd(llt_y)
+
+        # top angles
+        pax = prinangle(uwx[:,0], ulx[:,0])
+        x_angles_list.append(pax[0])
+        pay = prinangle(uwy[:,0], uly[:,0])
+        y_angles_list.append(pay[0])
+        
+        # %sv
+        denom_x = np.diag(wwt_x + llt_x) + psix
+        denom_y = np.diag(wwt_y + llt_y) + psiy
+        num_wx, num_wy = (uwx[:,0,None] @ uwx[:,0,None].T)*swx[0], (uwy[:,0,None] @ uwy[:,0,None].T)*swy[0]
+        num_lx, num_ly = (ulx[:,0,None] @ ulx[:,0,None].T)*slx[0], (uly[:,0,None] @ uly[:,0,None].T)*sly[0]
+        sv_wx_list.append(np.mean(np.diag(num_wx) / denom_x) * 100)
+        sv_wy_list.append(np.mean(np.diag(num_wy) / denom_y) * 100)
+        sv_lx_list.append(np.mean(np.diag(num_lx) / denom_x) * 100)
+        sv_ly_list.append(np.mean(np.diag(num_ly) / denom_y) * 100)
+                
+    if metric=="sv":
+        return sv_wx_list, sv_wy_list, sv_lx_list, sv_ly_list
+    
+    return x_angles_list, y_angles_list
+
+# function for returning the top eigenvector of a matrix - megan
+def get_top_vec(arr):
+    import scipy.linalg as slin
+    u,_,_ = slin.svd(arr)
+    top_vec = u[:,0]
+    n,_ = arr.shape
+    pct_pos = (top_vec >= 0).sum() / n
+    if pct_pos < 0.5:
+        return -top_vec, (1-pct_pos)
+    else:
+        return top_vec, pct_pos
