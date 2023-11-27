@@ -1,5 +1,5 @@
 # example data
-mat_fname = 'data/pepe_nomean_noar25_delay.mat'
+mat_fname = 'data/pe_nomean_noar25_delay.mat'
 dat = sio.loadmat(mat_fname)
 ex_sess = 'Pe180726'
 
@@ -137,7 +137,7 @@ fig,ax = plt.subplots(nrows=3, ncols=1, sharex=True)
 colors = [area1, area2, acrossarea]
 labels = ['within (right)', 'within (left)', 'across']
 
-subjects = ['wakko','satchel','pepe']
+subjects = ['wa','sa','pe']
 wts1, wts2, bts = np.array([]), np.array([]), np.array([])
 for subject in subjects:
     mat_fname = "data/within_across_rsc_" + subject + ".mat"
