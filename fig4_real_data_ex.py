@@ -58,7 +58,7 @@ pdf.savefig(fig)
 pdf.close()
 
 # noise corr
-mat_fname = "data/all_data_pepe.mat"
+mat_fname = "data/all_data_pe.mat"
 dat = sio.loadmat(mat_fname,squeeze_me=True,struct_as_record=False)['all_data']
 fnames = dat._fieldnames
 fnames.remove('arr_spatial')
