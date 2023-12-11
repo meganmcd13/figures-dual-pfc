@@ -93,7 +93,7 @@ def extract_mdl_params(fit_dat):
 
 # preprocess spike counts to remove condition means and auto regressive prediction
 def preprocess_counts(counts,targ_angs,binsize,ar_order):
-    import counts_analysis as cp
+    import counts_pkg.counts_analysis as cp
     sc_obj1 = cp.counts_analysis(counts,targ_angs,binsize)
     cond_means = sc_obj1.compute_cond_means()
     sc_obj2 = cp.counts_analysis(sc_obj1.rm_cond_means(),targ_angs,binsize)

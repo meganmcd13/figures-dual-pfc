@@ -15,14 +15,14 @@ plt.style.use('scifigs.mplstyle')
 # paths
 DATA_PATH = 'data/'
 PCCAFA_PATH = 'pcca_fa/'
-UTIL_PATH = 'core_utils/'
+UTIL_PATH = 'pcca_fa/utils'
 sys.path.append(DATA_PATH)
 sys.path.append(PCCAFA_PATH)
 sys.path.append(UTIL_PATH)
 
 # package and model imports
-import pcca_fa_mdl as pf
-import counts_analysis as cp
+import pcca_fa.pcca_fa_mdl as pf
+import counts_pkg.counts_analysis as cp
 
 # output figure path
 FIGURE_PATH = '../pcca_fa_figures_output/'
@@ -47,12 +47,12 @@ indep = color_map['independent']
 from utils import jitter, compute_rsc_within_pccafa, compute_rsc_across_pccafa, plot_raster, load_dict, flatten, extract_mdl_params, preprocess_counts, plot_metric, get_top_angles, get_top_vec
 
 # set which figures to create:
-FIGURE1 = False
-FIGURE2 = False
-FIGURE3 = False
-FIGURE4 = False
-FIGURE5 = False
-FIGURE6 = False
+FIGURE1 = True
+FIGURE2 = True
+FIGURE3 = True
+FIGURE4 = True
+FIGURE5 = True
+FIGURE6 = True
 FIGURE7 = True
 
 # run figures
