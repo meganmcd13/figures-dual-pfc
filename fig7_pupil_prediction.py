@@ -106,5 +106,5 @@ pdf = PdfPages(FIGURE_PATH + 'fig7_pupil_pred.pdf')
 pdf.savefig(fig)
 pdf.close()
 
-print('finished saving Figure 6 plots')
+print('finished saving Figure 7 plots')
 print('- - - - - - - - - - - - - - - -')
