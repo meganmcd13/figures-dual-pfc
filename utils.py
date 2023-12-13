@@ -63,7 +63,7 @@ def plot_raster(X,ax):
 
 # load dictionary using pickle
 def load_dict(filename):
-    import pickle5 as pickle
+    import pickle
     with open(filename, 'rb') as handle:
         data = handle.read()
     # reconstructing the data as dictionary
