@@ -3,3 +3,6 @@
 *.pyc
 *.asv
 .DS_Store
+figs/*
+raw_data_forms/*
+preprocessed_data/*
