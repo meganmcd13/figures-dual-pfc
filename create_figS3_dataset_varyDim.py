@@ -1,0 +1,70 @@
+# -- Figure S3 simulated data --
+# Structured dimensionality: across > within, across = within, across < within
+# Model considerations:
+    # 5-fold cross-validation, no warmstart
+    
+# imports
+import numpy as np
+import sys, time, argparse
+
+sys.path.append('helpers/')
+import helpers.pcca_fa.sim_pcca_fa as spf
+import helpers.pcca_fa.pcca_fa_mdl as pf
+from dual_pfc_funcs import getBaseSimParams, save_dict
+
+# param initialization
+warmstart = False
+flat_eigs = True
+cv_list = np.arange(10) # dimensionalities to test in cross-validation
+
+p = getBaseSimParams()
+xDim,yDim = p['xDim'], p['yDim']
+n_boots = 30 # decrease since we are cross-validating
+sv_goal = p['sv_goal']
+
+def run_vary_dim(n_trials):
+    config_dims = [(1,5),(3,3),(5,1)] # (across,within) dims for each config
+
+    save_name = 'preprocessed_data/simdataset_varyDim_noWS_n{}.pkl'.format(n_trials)
+    print('Will save as {}'.format(save_name))
+
+    output_dict = {
+        "dim_changed": 'both',
+        "n_boots": n_boots,
+        "N": n_trials,
+        "sv": sv_goal,
+        "dim_list": config_dims,
+        "sim_params": [],
+        "est_params": []
+    }
+
+    for dims in config_dims:
+        print('Currently evaluating dims: {}'.format(dims))
+        zDim = dims[0]
+        zxDim,zyDim = dims[1],dims[1]
+        simulator = spf.sim_pcca_fa(xDim,yDim,zDim,zxDim,zyDim,flat_eigs=flat_eigs,equal_eigs=False,sv_goal=sv_goal)
+        output_dict["sim_params"].append(simulator.get_params())
+        for i in range(n_boots):
+            if i%10 == 0: print('  sim {} of {}'.format(i+1, n_boots))
+            
+            # simulate new independent dataset
+            X,Y = simulator.sim_data(n_trials)
+
+            # fit the data using pcca-fa
+            model = pf.pcca_fa()
+            model.crossvalidate(X,Y,zDim_list=cv_list,zxDim_list=cv_list,zyDim_list=cv_list,n_folds=5,warmstart=warmstart,parallelize=True)
+
+            # save parameters
+            output_dict["est_params"].append(model.get_params())
+
+            # save the results each iter
+            save_dict(output_dict, save_name)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-N',type=int,help='number of trials',required=True)
+    
+    args = parser.parse_args()
+    t = time.time()
+    run_vary_dim(args.N)
+    print("elapsed time: ", time.time()-t)
