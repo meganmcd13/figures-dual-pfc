@@ -4,6 +4,8 @@ import sys
 import numpy as np
 import scipy.io as sio
 from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import r2_score
 
 sys.path.append('helpers/')
 from dual_pfc_funcs import load_dict, save_dict, getParams
@@ -11,6 +13,7 @@ import helpers.pcca_fa.pcca_fa_mdl as pf
 
 subjects = getParams()['subjects']
 data_path = 'preprocessed_data/'
+CROSSVAL = True
 
 dat = {}
 for sub in subjects:
@@ -60,15 +63,28 @@ for sub in subjects:
         r2,r2_evoked = {}, {}
         pred,pred_evoked = {}, {}
         for latent,x in latents.items():
-            # predict avg pupil from latents
-            lm = LinearRegression().fit(x,y_zsc)
-            pred[latent] = lm.predict(x)
-            r2[latent] = lm.score(x,y_zsc)
+            if CROSSVAL:
+                # trial-to-trial pupil
+                lm = LinearRegression()
+                pupil_hat = cross_val_predict(lm, x, y_zsc, cv=10)
+                pred[latent] = pupil_hat
+                r2[latent] = r2_score(y_zsc, pupil_hat)
 
-            # predict evoked pupil from latents
-            lm = LinearRegression().fit(x,y_evoked_zsc)
-            pred_evoked[latent] = lm.predict(x)
-            r2_evoked[latent] = lm.score(x,y_evoked_zsc)
+                # evoked pupil
+                lm = LinearRegression()
+                pupil_hat = cross_val_predict(lm, x, y_evoked_zsc, cv=10)
+                pred_evoked[latent] = pupil_hat
+                r2_evoked[latent] = r2_score(y_evoked_zsc, pupil_hat)
+            else:
+                # predict avg pupil from latents
+                lm = LinearRegression().fit(x,y_zsc)
+                pred[latent] = lm.predict(x)
+                r2[latent] = lm.score(x,y_zsc)
+
+                # predict evoked pupil from latents
+                lm = LinearRegression().fit(x,y_evoked_zsc)
+                pred_evoked[latent] = lm.predict(x)
+                r2_evoked[latent] = lm.score(x,y_evoked_zsc)
 
         # save info:
         dat[sess] = {
@@ -92,15 +108,31 @@ for sess in dat:
                 x = dat[sess]['latents'][latent][:N,:]
                 # avg pupil
                 y = dat[j]['pupil_zsc'][:N].reshape(-1, 1)
-                lm = LinearRegression().fit(x,y)
-                null_r2[latent].append(lm.score(x,y))
+                if CROSSVAL:
+                    # cross-validated
+                    lm = LinearRegression()
+                    pupil_hat = cross_val_predict(lm, x, y, cv=10)
+                    null_r2[latent].append(r2_score(y, pupil_hat))
+                else:
+                    # fit linear model
+                    lm = LinearRegression().fit(x,y)
+                    null_r2[latent].append(lm.score(x,y))
                 # evoked pupil
                 y_evoked = dat[j]['evoked']['evoked_zsc'][:N].reshape(-1, 1)
-                lm = LinearRegression().fit(x,y_evoked)
-                null_r2_evoked[latent].append(lm.score(x,y_evoked))
+                if CROSSVAL:
+                    # cross-validated
+                    lm = LinearRegression()
+                    pupil_hat = cross_val_predict(lm, x, y_evoked, cv=10)
+                    null_r2_evoked[latent].append(r2_score(y_evoked, pupil_hat))
+                else:
+                    lm = LinearRegression().fit(x,y_evoked)
+                    null_r2_evoked[latent].append(lm.score(x,y_evoked))
     dat[sess]['null_r2'] = null_r2
     dat[sess]['evoked']['null_r2'] = null_r2_evoked
 
 # save data
-save_name = data_path + 'all_pupil_prediction_1d.pkl'
+if CROSSVAL:
+    save_name = data_path + 'all_pupil_prediction_1d_cv.pkl'
+else:
+    save_name = data_path + 'all_pupil_prediction_1d.pkl'
 save_dict(dat, save_name)
