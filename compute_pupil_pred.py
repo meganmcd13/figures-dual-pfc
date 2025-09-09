@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import r2_score
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 from dual_pfc_funcs import load_dict, save_dict, getParams
 import helpers.pcca_fa.pcca_fa_mdl as pf
 
@@ -41,9 +41,9 @@ for sub in subjects:
         z,_ = mdl.estep(LH,RH)
 
         latents = {
-            'across'      : z['z_mu'], # x and y are the same if mode is paired
-            'within-left' : z['zx_mu'],
-            'within-right': z['zy_mu'],
+            'across'      : z['z_mu'],
+            'within-left' : z['zx1_mu'],
+            'within-right': z['zx2_mu'],
         }
 
         # get pupil data, avg and evoked
