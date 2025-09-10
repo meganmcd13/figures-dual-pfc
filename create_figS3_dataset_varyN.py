@@ -8,10 +8,10 @@
 import numpy as np
 import sys, time
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 import helpers.pcca_fa.sim_pcca_fa as spf
 import helpers.pcca_fa.pcca_fa_mdl as pf
-import helpers.cca.prob_cca as pcca
+import helpers.pcca_fa.cca.prob_cca as pcca
 from dual_pfc_funcs import getBaseSimParams, save_dict
 
 # param initialization
@@ -19,8 +19,8 @@ flat_eigs = True
 cv_list = np.arange(15) # dimensionalities to test in cross-validation
 
 p = getBaseSimParams()
-xDim,yDim = p['xDim'], p['yDim']
-zDim,zxDim,zyDim = p['zDim'], p['zxDim'], p['zyDim']
+n1,n2 = p['n1'], p['n2']
+d,d1,d2 = p['d'], p['d1'], p['d2']
 n_boots = 30 # decrease since we are cross-validating
 sv_goal = p['sv_goal']
 n_trials = np.array([100,150,300,600,1000,1500])
@@ -45,18 +45,18 @@ def run_vary_N():
             seed = j*n_boots + i
             print('Currently evaluating boot {} of {}, N = {}'.format(i+1,n_boots,N))
 
-            simulator = spf.sim_pcca_fa(xDim,yDim,zDim,zxDim,zyDim,flat_eigs=flat_eigs,equal_eigs=False,sv_goal=sv_goal)
-            X,Y = simulator.sim_data(N)
+            simulator = spf.sim_pcca_fa(n1,n2,d,d1,d2,flat_eigs=flat_eigs,sv_goal=sv_goal)
+            X_1,X_2 = simulator.sim_data(N)
 
             # fit the data using pcca-fa
             model = pf.pcca_fa()
 
             model.set_params(simulator.get_params())
-            model.crossvalidate(X,Y,zDim_list=cv_list,zxDim_list=cv_list,zyDim_list=cv_list,n_folds=n_folds,warmstart=False,parallelize=True,rand_seed=seed)
+            model.crossvalidate(X_1,X_2,d_list=cv_list,d1_list=cv_list,d2_list=cv_list,n_folds=n_folds,warmstart=False,parallelize=True,rand_seed=seed)
 
             # fit the data using pcca
             pcca_model = pcca.prob_cca()
-            pcca_model.crossvalidate(X,Y,zDim_list=cv_list,rand_seed=seed,n_folds=n_folds,parallelize=True,warmstart=False)
+            pcca_model.crossvalidate(X_1,X_2,zDim_list=cv_list,rand_seed=seed,n_folds=n_folds,parallelize=True,warmstart=False)
 
             # save parameters
             output_dict["sim_params"].append(simulator.get_params())

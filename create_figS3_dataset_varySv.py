@@ -7,7 +7,7 @@
 import numpy as np
 import sys, argparse, time
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 import helpers.pcca_fa.sim_pcca_fa as spf
 import helpers.pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import getBaseSimParams, save_dict
@@ -18,8 +18,8 @@ flat_eigs = True
 cv_list = np.arange(10) # dimensionalities to test in cross-validation
 
 p = getBaseSimParams()
-xDim,yDim = p['xDim'], p['yDim']
-zDim,zxDim,zyDim = p['zDim'], p['zxDim'], p['zyDim']
+n1,n2 = p['n1'], p['n2']
+d,d1,d2 = p['d'], p['d1'], p['d2']
 n_boots = 30 # decrease since we are cross-validating
 
 def run_vary_sv(n_trials):
@@ -40,17 +40,17 @@ def run_vary_sv(n_trials):
 
     for sv_goal,seed in zip(config_sv,seeds):
         print('Currently evaluating sv: {}'.format(sv_goal))
-        simulator = spf.sim_pcca_fa(xDim,yDim,zDim,zxDim,zyDim,flat_eigs=flat_eigs,equal_eigs=False,sv_goal=sv_goal,rand_seed=seed) # one GT sim
+        simulator = spf.sim_pcca_fa(n1,n2,d,d1,d2,flat_eigs=flat_eigs,sv_goal=sv_goal,rand_seed=seed) # one GT sim
         output_dict["sim_params"].append(simulator.get_params())
         for i in range(n_boots):
             if i%10 == 0: print('  sim {} of {}'.format(i+1, n_boots))
 
             # simulate new independent dataset
-            X,Y = simulator.sim_data(n_trials)
+            X_1,X_2 = simulator.sim_data(n_trials)
 
             # fit the data using pcca-fa
             model = pf.pcca_fa()
-            model.crossvalidate(X,Y,zDim_list=cv_list,zxDim_list=cv_list,zyDim_list=cv_list,n_folds=5,warmstart=warmstart,parallelize=True)
+            model.crossvalidate(X_1,X_2,d_list=cv_list,d1_list=cv_list,d2_list=cv_list,n_folds=5,warmstart=warmstart,parallelize=True)
 
             # save parameters
             output_dict["est_params"].append(model.get_params())
