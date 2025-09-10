@@ -2,7 +2,7 @@
 
 Data processing and figure generation for the following reference:
 
-- McDonnell, M.E.&ast;, Umakantha, A.&ast;, Williamson, R.C.&ast;, Smith, M.A.&dagger;, & Yu, B. M.&dagger; Interactions across hemispheres in prefrontal cortex reflect global cognitive processing. bioRxiv (2025). <https://www.biorxiv.org/> (&ast; and &dagger; indicate equal contribution)
+- McDonnell, M.E.&ast;, Umakantha, A.&ast;, Williamson, R.C.&ast;, Smith, M.A.&dagger;, & Yu, B. M.&dagger; Interactions across hemispheres in prefrontal cortex reflect global cognitive processing. bioRxiv (2025). <https://www.biorxiv.org/content/10.1101/2025.06.12.659406v1> (&ast; and &dagger; indicate equal contribution)
 
 ## Setup
 
@@ -29,21 +29,21 @@ The remaining steps take place in Python, using the conda environment created in
 
 - `compute_pupil_pred_1d.py` - control analysis for Figure 6 to predict pupil diameter using 1 co-fluctuation pattern
 - `compute_pupil_pred.py` - main analysis for Figure 6 to predict pupil diameter using all co-fluctuation patterns
-- `compute_rsc.py` - compute across- and within-area $r_{sc}$ distributions and signal tuning for Figure 2 and Figure S2
+- `compute_rsc.py` - compute across- and within-area $r_{sc}$ distributions and signal tuning for Figure 2 and Figure A2
 - `create_fig5_chance.py` - control analysis for Figure 5 to fit pCCA-FA models to simulated data with a specified $\theta_{sim}$
-- `create_figS3_dataset_varyDim.py` - model validation simulations where dimensionality is varied 
-- `create_figS3_dataset_varyN.py` - model validation simulations where number of trials is varied 
-- `create_figS3_dataset_varySv.py` - model validation simulations where shared variance is varied 
-- `create_figS4_dataset_varyTheta.py` - model validation simulations where $\theta_{sim}$ is varied 
+- `create_figA3_dataset_varyDim.py` - model validation simulations where dimensionality is varied 
+- `create_figA3_dataset_varyN.py` - model validation simulations where number of trials is varied 
+- `create_figA3_dataset_varySv.py` - model validation simulations where shared variance is varied 
+- `create_figA4_dataset_varyTheta.py` - model validation simulations where $\theta_{sim}$ is varied 
 - `dual_pfc_funcs.py` - file containing utilities used in various analyses
-- `fit_alt_models.py` - main analysis for Figure S5 to compare pCCA-FA to alternative models
-- `fit_null_pccafa_models.py` - control analysis for Figure S1 to fit pCCA-FA to flipped neural activity
+- `fit_alt_models.py` - main analysis for Figure A5 to compare pCCA-FA to alternative models
+- `fit_null_pccafa_models.py` - control analysis for Figure A1 to fit pCCA-FA to flipped neural activity
 - `fit_pccafa_models.py` - main script to fit pCCA-FA models to neural population activity
-- `fit_slow_pccafa_models.py` - analysis for Figure S1 to fit pCCA-FA to the estimated slow components of neural activity
+- `fit_slow_pccafa_models.py` - analysis for Figure A1 to fit pCCA-FA to the estimated slow components of neural activity
 
 ## Figure generation
 
-The components of each figure can be reproduced using the respective Python notebook.
+The components of each figure can be reproduced using the respective Python notebook (`plot_figure<FIG>.ipynb`).
 
 ## Contact
 
