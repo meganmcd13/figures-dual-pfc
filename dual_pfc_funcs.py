@@ -23,8 +23,8 @@ def getBaseSimParams():
     # return dictionary of base simulation parameters
     params = {
         'n_trials' : 1000,
-        'xDim' : 30, 'yDim' : 30,
-        'zDim' : 5, 'zxDim' : 3, 'zyDim' : 3,
+        'n1' : 30, 'n2' : 30,
+        'd'  : 5,  'd1' : 3, 'd2' : 3,
         'n_boots' : 100,
         'sv_goal' : (15,10),
     }
@@ -113,38 +113,38 @@ def get_top_angle(params,across_mode='cov'):
 
     mdl = pf.pcca_fa()
     mdl.set_params(params)
-    wx,wy,lx,ly = mdl.get_loading_matrices()
+    W_1,W_2,L_1,L_2 = mdl.get_loading_matrices()
 
     if across_mode == 'cov':
         # orthonormalize W's to be be ordered by SV
-        uwx,_,_ = slin.svd(wx)
-        uwy,_,_ = slin.svd(wy)
+        uw1,_,_ = slin.svd(W_1)
+        uw2,_,_ = slin.svd(W_2)
     elif across_mode == 'corr':
         # order W by canon corrs
-        uwx,uwx = mdl.get_correlative_modes()
+        uw1,uw2 = mdl.get_correlative_modes()
     else:
         raise ValueError('across_mode must be "cov" or "corr"')
     
     # orthogonalize L to be ordered by SV
-    ulx,_,_ = slin.svd(lx)
-    uly,_,_ = slin.svd(ly)
+    ul1,_,_ = slin.svd(L_1)
+    ul2,_,_ = slin.svd(L_2)
 
     # top angles
-    x_angle = prinangle(uwx[:,0], ulx[:,0])[0]
-    y_angle = prinangle(uwy[:,0], uly[:,0])[0]
+    x1_angle = prinangle(uw1[:,0], ul1[:,0])[0]
+    x2_angle = prinangle(uw2[:,0], ul2[:,0])[0]
 
-    return x_angle, y_angle
+    return x1_angle, x2_angle
 
 # for cross-validation - determine acceptable latent dimensionalities to test
-def get_zlists(X,Y,cca_dim,fa_dim):
-    # X and Y are spike trains (xDim x trials)
-    # cca_dim and fa_dim are desired maximum dimensionality to test
+def get_dlists(X_1,X_2,across_area_dim,within_area_dim):
+    # X_1 and X_2 are spike trains (n1 x N, n2 x N)
+    # across_area_dim and within_area_dim are desired maximum dimensionality to test
     import numpy as np
-    max_dim = np.minimum(X.shape[1],Y.shape[1]) # max acceptable dim relative to number of neurons
-    zDim = np.minimum(cca_dim,max_dim)
-    zxDim = np.minimum(fa_dim,X.shape[1])
-    zyDim = np.minimum(fa_dim,Y.shape[1])
-    return (np.arange(zDim)+1).astype(int),(np.arange(zxDim)+1).astype(int),(np.arange(zyDim)+1).astype(int)
+    max_dim = np.minimum(X_1.shape[1],X_2.shape[1]) # max acceptable dim relative to number of neurons
+    d = np.minimum(across_area_dim,max_dim)
+    d1 = np.minimum(within_area_dim,X_1.shape[1])
+    d2 = np.minimum(within_area_dim,X_2.shape[1])
+    return (np.arange(d)+1).astype(int),(np.arange(d1)+1).astype(int),(np.arange(d2)+1).astype(int)
 
 # generate Gaussian Process
 def gen_GP(GP_tau, GP_len, noise_var=1e-3, seed=0, N=1):
