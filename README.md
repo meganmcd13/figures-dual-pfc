@@ -8,9 +8,9 @@ Data processing and figure generation for the following reference:
 
 This code suite requires the following packages, which should be placed inside the `helpers/` folder.
 
-- pCCA-FA: <https://github.com/akash-uma/pcca_fa>
-- FA: <https://github.com/akash-uma/fa>
-- CCA: <https://github.com/akash-uma/cca>
+- pCCA-FA: <https://github.com/SmithLabNeuro/pcca_fa>
+- FA: <https://github.com/meganmcd13/fa>
+- CCA: <https://github.com/meganmcd13/cca>
 
 The pCCA-FA package includes an `environment.yml` file, which should be used to create a conda environment from which to run this code suite.
 
