@@ -1,9 +1,9 @@
 import scipy.io as sio
 import sys, argparse, time
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 import helpers.pcca_fa.pcca_fa_mdl as pf
-from dual_pfc_funcs import get_zlists, save_dict
+from dual_pfc_funcs import get_dlists, save_dict
 
 def main(subject):
     max_dim = 15
@@ -30,11 +30,11 @@ def main(subject):
         RH = getattr(curr_dat,'fast_component_right')
 
         # get the lists of dimensions to cross-validate over
-        z_list,zx_list,zy_list = get_zlists(LH,RH,max_dim,max_dim)
+        d_list,d1_list,d2_list = get_dlists(LH,RH,max_dim,max_dim)
 
         # crossvalidate
         pcca_fa_mdl = pf.pcca_fa()
-        cvLL = pcca_fa_mdl.crossvalidate(LH,RH,zDim_list=z_list,zxDim_list=zx_list,zyDim_list=zy_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
+        cvLL = pcca_fa_mdl.crossvalidate(LH,RH,d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
 
         # put cross-validation results into dict
         results[sess] = {

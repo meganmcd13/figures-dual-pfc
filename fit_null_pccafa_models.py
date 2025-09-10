@@ -2,7 +2,7 @@ import scipy.io as sio
 import numpy as np
 import sys
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 import helpers.pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import getParams, save_dict, load_dict
 
@@ -31,19 +31,19 @@ for sub in subjects:
         # get data
         curr_dat = getattr(dat,sess)
         # get the lists of dimensions
-        z_list,zx_list,zy_list = np.array([pccafa_params['zDim']]), np.array([pccafa_params['zxDim']]), np.array([pccafa_params['zyDim']]),
+        d_list,d1_list,d2_list = np.array([pccafa_params['d']]), np.array([pccafa_params['d1']]), np.array([pccafa_params['d2']])
 
         # first fit pCCA-FA to fast component (AR-25 removed)
         LH = getattr(curr_dat,'fast_component_left')
         RH = getattr(curr_dat,'fast_component_right')
         # crossvalidate to get canon corr - FLIP control
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH[::-1,:],zDim_list=z_list,zxDim_list=zx_list,zyDim_list=zy_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
+        mdl.crossvalidate(LH,RH[::-1,:],d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess,n_folds=2)
         results[sess]['fast_rho'] = mdl.get_params()['cv_rho']
         results[sess]['fast_params'] = mdl.get_params()
 
         # now fit pCCA-FA to only mean-subtracted data (no slow removed)
-        raw_counts = getattr(curr_dat,'raw_counts') # N x D
+        raw_counts = getattr(curr_dat,'raw_counts') # N x n1+n2
         # subtract mean by target angle
         all_conds = np.unique(curr_dat.targ_angs)
         counts_mat_nomean = np.zeros_like(raw_counts)
@@ -61,7 +61,7 @@ for sub in subjects:
 
         # crossvalidate to get canon corr - FLIP control
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH[::-1,:],zDim_list=z_list,zxDim_list=zx_list,zyDim_list=zy_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
+        mdl.crossvalidate(LH,RH[::-1,:],d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
         results[sess]['raw_rho'] = mdl.get_params()['cv_rho']
         results[sess]['raw_params'] = mdl.get_params()
 

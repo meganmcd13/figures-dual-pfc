@@ -2,7 +2,7 @@ import scipy.io as sio
 import numpy as np
 import sys
 
-sys.path.append('helpers/')
+sys.path.append('helpers/pcca_fa/')
 import helpers.pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import getParams, save_dict, load_dict
 
@@ -31,21 +31,21 @@ for sub in subjects:
         # get data
         curr_dat = getattr(dat,sess)
         # get the lists of dimensions
-        z_list,zx_list,zy_list = np.array([pccafa_params['zDim']]), np.array([pccafa_params['zxDim']]), np.array([pccafa_params['zyDim']]),
+        d_list,d1_list,d2_list = np.array([pccafa_params['d']]), np.array([pccafa_params['d1']]), np.array([pccafa_params['d2']])
 
         # first fit pCCA-FA to slow component (AR-25)
         LH = getattr(curr_dat,'slow_component_left')
         RH = getattr(curr_dat,'slow_component_right')
         # crossvalidate to get canon corr - 
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH,zDim_list=z_list,zxDim_list=zx_list,zyDim_list=zy_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
+        mdl.crossvalidate(LH,RH,d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
         results[sess]['slow_rho'] = mdl.get_params()['cv_rho']
         results[sess]['slow_params'] = mdl.get_params()
 
         # now for pCCA-FA to flipped slow component
         # crossvalidate to get canon corr - FLIP control
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH[::-1,:],zDim_list=z_list,zxDim_list=zx_list,zyDim_list=zy_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
+        mdl.crossvalidate(LH,RH[::-1,:],d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
         results[sess]['slow_flip_rho'] = mdl.get_params()['cv_rho']
         results[sess]['slow_flip_params'] = mdl.get_params()
 
