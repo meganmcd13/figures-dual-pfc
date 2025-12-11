@@ -50,8 +50,6 @@ def run_vary_N():
 
             # fit the data using pcca-fa
             model = pf.pcca_fa()
-
-            model.set_params(simulator.get_params())
             model.crossvalidate(X_1,X_2,d_list=cv_list,d1_list=cv_list,d2_list=cv_list,n_folds=n_folds,warmstart=False,parallelize=True,rand_seed=seed)
 
             # fit the data using pcca
