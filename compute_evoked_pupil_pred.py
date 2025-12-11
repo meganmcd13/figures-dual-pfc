@@ -1,5 +1,5 @@
-# -- Figure 6 control analysis --
-# create pupil latents using top dimension only
+# -- Figure 6 data --
+# create pupil latents
 import sys
 import numpy as np
 import scipy.io as sio
@@ -13,7 +13,7 @@ import helpers.pcca_fa.pcca_fa_mdl as pf
 
 subjects = getParams()['subjects']
 data_path = 'preprocessed_data/'
-CROSSVAL = True
+CROSSVAL = False
 
 dat = {}
 for sub in subjects:
@@ -40,71 +40,70 @@ for sub in subjects:
         mdl.set_params(params)
         z,_ = mdl.estep(LH,RH)
 
-        # orthogonalize latents and select first dim
-        z_orth,_ = mdl.orthogonalize_latents(z['zx1_mu'],z['zx2_mu'],do_across=True, z_mu=z['z_mu'], across_mode='paired')
         latents = {
-            'across' : z_orth['z']['area1'][:,0,np.newaxis], # area 1 and 2 are the same if mode is paired
-            'within-left' : z_orth['z1'][:,0,np.newaxis],
-            'within-right': z_orth['z2'][:,0,np.newaxis],
+            'across'      : z['z_mu'],
+            'within-left' : z['zx1_mu'],
+            'within-right': z['zx2_mu'],
         }
 
-        # get pupil data, avg and evoked
-        pupil_vals = getattr(curr_dat,'fast_component_pupil')
-        y = pupil_vals.reshape(-1,1)
+        # get evoked pupil data
+        evoked_peak = getattr(curr_dat.pupil,'evoked')
+        evoked_baseline = getattr(curr_dat.pupil,'baseline')
+        # evoked_baseline = getattr(curr_dat,'slow_component_pupil')
+        y_evoked = evoked_peak - evoked_baseline
         
         # z-score pupil per session
-        y_zsc = (y - np.mean(y)) / np.std(y)
+        y_evoked_zsc = (y_evoked - np.mean(y_evoked)) / np.std(y_evoked)
 
         # predict pupil from latents
-        r2 = {}
-        pred = {}
+        r2_evoked = {}
+        pred_evoked = {}
         for latent,x in latents.items():
             if CROSSVAL:
-                # trial-to-trial pupil
+                # evoked pupil
                 lm = LinearRegression()
-                pupil_hat = cross_val_predict(lm, x, y_zsc, cv=10)
-                pred[latent] = pupil_hat
-                r2[latent] = r2_score(y_zsc, pupil_hat)
+                pupil_hat = cross_val_predict(lm, x, y_evoked_zsc, cv=10)
+                pred_evoked[latent] = pupil_hat
+                r2_evoked[latent] = r2_score(y_evoked_zsc, pupil_hat)
             else:
-                # predict avg pupil from latents
-                lm = LinearRegression().fit(x,y_zsc)
-                pred[latent] = lm.predict(x)
-                r2[latent] = lm.score(x,y_zsc)
+                # predict evoked pupil from latents
+                lm = LinearRegression().fit(x,y_evoked_zsc)
+                pred_evoked[latent] = lm.predict(x)
+                r2_evoked[latent] = lm.score(x,y_evoked_zsc)
 
         # save info:
         dat[sess] = {
-            'pupil_zsc'   : y_zsc,
+            'pupil_zsc'   : y_evoked_zsc,
             'latents'     : latents,
-            'r2'          : r2,
-            'predictions' : pred,
+            'r2'          : r2_evoked,
+            'predictions' : pred_evoked,
         }
 
 # get null distribution for each session from other sessions latents
 for sess in dat:
     print('Getting null distribution for session: ', sess)
-    null_r2 = {'across':[],'within-left':[],'within-right':[]}
+    null_r2_evoked = {'across':[],'within-left':[],'within-right':[]}
     for latent in ['across','within-left','within-right']:
         for j in dat:
             if sess!=j and j.startswith(sess[:2]):
                 # compare session "sess" to all other sessions from the same subject
                 N = min([len(dat[sess]['pupil_zsc']),len(dat[j]['pupil_zsc'])])
                 x = dat[sess]['latents'][latent][:N,:]
-                # avg pupil
-                y = dat[j]['pupil_zsc'][:N].reshape(-1, 1)
+                # evoked pupil
+                y_evoked = dat[j]['pupil_zsc'][:N].reshape(-1, 1)
                 if CROSSVAL:
                     # cross-validated
                     lm = LinearRegression()
-                    pupil_hat = cross_val_predict(lm, x, y, cv=10)
-                    null_r2[latent].append(r2_score(y, pupil_hat))
+                    pupil_hat = cross_val_predict(lm, x, y_evoked, cv=10)
+                    null_r2_evoked[latent].append(r2_score(y_evoked, pupil_hat))
                 else:
-                    # fit linear model
-                    lm = LinearRegression().fit(x,y)
-                    null_r2[latent].append(lm.score(x,y))
-    dat[sess]['null_r2'] = null_r2
+                    lm = LinearRegression().fit(x,y_evoked)
+                    null_r2_evoked[latent].append(lm.score(x,y_evoked))
+    dat[sess]['null_r2'] = null_r2_evoked
 
 # save data
 if CROSSVAL:
-    save_name = data_path + 'pupil_prediction_1d_cv.pkl'
+    save_name = data_path + 'evoked_pupil_prediction_cv.pkl'
 else:
-    save_name = data_path + 'pupil_prediction_1d.pkl'
+    save_name = data_path + 'evoked_pupil_prediction.pkl'
 save_dict(dat, save_name)

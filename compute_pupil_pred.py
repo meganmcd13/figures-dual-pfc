@@ -49,17 +49,13 @@ for sub in subjects:
         # get pupil data, avg and evoked
         pupil_vals = getattr(curr_dat,'fast_component_pupil')
         y = pupil_vals.reshape(-1,1)
-        evoked_peak = getattr(curr_dat.pupil,'evoked')
-        evoked_baseline = getattr(curr_dat.pupil,'baseline')
-        y_evoked = evoked_peak - evoked_baseline
         
         # z-score pupil per session
         y_zsc = (y - np.mean(y)) / np.std(y)
-        y_evoked_zsc = (y_evoked - np.mean(y_evoked)) / np.std(y_evoked)
 
         # predict pupil from latents
-        r2,r2_evoked = {}, {}
-        pred,pred_evoked = {}, {}
+        r2 = {}
+        pred = {}
         for latent,x in latents.items():
             if CROSSVAL:
                 # trial-to-trial pupil
@@ -67,22 +63,11 @@ for sub in subjects:
                 pupil_hat = cross_val_predict(lm, x, y_zsc, cv=10)
                 pred[latent] = pupil_hat
                 r2[latent] = r2_score(y_zsc, pupil_hat)
-
-                # evoked pupil
-                lm = LinearRegression()
-                pupil_hat = cross_val_predict(lm, x, y_evoked_zsc, cv=10)
-                pred_evoked[latent] = pupil_hat
-                r2_evoked[latent] = r2_score(y_evoked_zsc, pupil_hat)
             else:
                 # predict avg pupil from latents
                 lm = LinearRegression().fit(x,y_zsc)
                 pred[latent] = lm.predict(x)
                 r2[latent] = lm.score(x,y_zsc)
-
-                # predict evoked pupil from latents
-                lm = LinearRegression().fit(x,y_evoked_zsc)
-                pred_evoked[latent] = lm.predict(x)
-                r2_evoked[latent] = lm.score(x,y_evoked_zsc)
 
         # save info:
         dat[sess] = {
@@ -90,14 +75,12 @@ for sub in subjects:
             'latents'     : latents,
             'r2'          : r2,
             'predictions' : pred,
-            'evoked'      : {'r2':r2_evoked, 'predictions':pred_evoked,'evoked_zsc':y_evoked_zsc},
         }
 
 # get null distribution for each session from other sessions latents
 for sess in dat:
     print('Getting null distribution for session: ', sess)
     null_r2 = {'across':[],'within-left':[],'within-right':[]}
-    null_r2_evoked = {'across':[],'within-left':[],'within-right':[]}
     for latent in ['across','within-left','within-right']:
         for j in dat:
             if sess!=j and j.startswith(sess[:2]):
@@ -115,22 +98,11 @@ for sess in dat:
                     # fit linear model
                     lm = LinearRegression().fit(x,y)
                     null_r2[latent].append(lm.score(x,y))
-                # evoked pupil
-                y_evoked = dat[j]['evoked']['evoked_zsc'][:N].reshape(-1, 1)
-                if CROSSVAL:
-                    # cross-validated
-                    lm = LinearRegression()
-                    pupil_hat = cross_val_predict(lm, x, y_evoked, cv=10)
-                    null_r2_evoked[latent].append(r2_score(y_evoked, pupil_hat))
-                else:
-                    lm = LinearRegression().fit(x,y_evoked)
-                    null_r2_evoked[latent].append(lm.score(x,y_evoked))
     dat[sess]['null_r2'] = null_r2
-    dat[sess]['evoked']['null_r2'] = null_r2_evoked
 
 # save data
 if CROSSVAL:
-    save_name = data_path + 'all_pupil_prediction_cv.pkl'
+    save_name = data_path + 'pupil_prediction_cv.pkl'
 else:
-    save_name = data_path + 'all_pupil_prediction.pkl'
+    save_name = data_path + 'pupil_prediction.pkl'
 save_dict(dat, save_name)
