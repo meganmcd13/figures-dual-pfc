@@ -11,6 +11,7 @@ data_path = 'preprocessed_data/'
 save_name = '{:s}/fast_null_fits_0_25.pkl'.format(data_path)
 print(f"Will save as {save_name}")
     
+warmstart = True
 results = {}
 
 for sub in subjects:
@@ -25,21 +26,20 @@ for sub in subjects:
 
     for i_sess,sess in enumerate(fnames,1):
         results[sess] = {}
-        print('Crossvalidating {:s} ({} of {})...'.format(sess,i_sess,len(fnames)))
+        print('Fitting {:s} ({} of {})...'.format(sess,i_sess,len(fnames)))
         pccafa_params = pccafa_fits[sess]['params'].copy()
 
         # get data
         curr_dat = getattr(dat,sess)
-        # get the lists of dimensions
-        d_list,d1_list,d2_list = np.array([pccafa_params['d']]), np.array([pccafa_params['d1']]), np.array([pccafa_params['d2']])
 
         # first fit pCCA-FA to fast component (AR-25 removed)
         LH = getattr(curr_dat,'fast_component_left')
         RH = getattr(curr_dat,'fast_component_right')
         # crossvalidate to get canon corr - FLIP control
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH[::-1,:],d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess,n_folds=2)
-        results[sess]['fast_rho'] = mdl.get_params()['cv_rho']
+        mdl.train(LH,RH[::-1,:],d=pccafa_params['d'],d1=pccafa_params['d1'],d2=pccafa_params['d2'],warmstart=warmstart,rand_seed=i_sess)
+        rho = mdl.compute_cv_canonical_corrs(LH,RH[::-1,:],n_folds=10,rand_seed=i_sess)
+        results[sess]['fast_rho'] = rho
         results[sess]['fast_params'] = mdl.get_params()
 
         # now fit pCCA-FA to only mean-subtracted data (no slow removed)
@@ -61,8 +61,9 @@ for sub in subjects:
 
         # crossvalidate to get canon corr - FLIP control
         mdl = pf.pcca_fa()
-        mdl.crossvalidate(LH,RH[::-1,:],d_list=d_list,d1_list=d1_list,d2_list=d2_list,warmstart=True,parallelize=True,early_stop=False,rand_seed=i_sess)
-        results[sess]['raw_rho'] = mdl.get_params()['cv_rho']
+        mdl.train(LH,RH[::-1,:],d=pccafa_params['d'],d1=pccafa_params['d1'],d2=pccafa_params['d2'],warmstart=warmstart,rand_seed=i_sess)
+        rho = mdl.compute_cv_canonical_corrs(LH,RH[::-1,:],n_folds=10,rand_seed=i_sess)
+        results[sess]['raw_rho'] = rho
         results[sess]['raw_params'] = mdl.get_params()
 
         # save the results each iter
