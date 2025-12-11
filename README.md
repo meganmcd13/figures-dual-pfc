@@ -16,7 +16,7 @@ The pCCA-FA package includes an `environment.yml` file, which should be used to 
 
 ## Data deposit
 
-The data used to generate these figures has been deposited in the following [repository](). The data files should be downloaded and placed in the `raw_data_forms/` folder.
+The data used to generate these figures has been deposited in the following [repository](https://doi.org/10.5281/zenodo.15079270). The data files should be downloaded and placed in the `raw_data_forms/` folder.
 
 ## Data preprocessing
 
