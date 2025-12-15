@@ -28,13 +28,13 @@ for sub=subjects
         curr_pupil = behav{ii}.pupil;
 
         % compute pupil information
-        trial = cell(1,n_pupil);
-        avg_outlier = nan(1,n_pupil);
-        avg = nan(1,n_pupil);
-        baseline = nan(1,n_pupil);
-        evoked = nan(1,n_pupil);
-        n_samp = nan(1,n_pupil);
-        for jj = 1:length(curr_pupil)
+        N = length(curr_pupil);
+        trial = cell(1,N);
+        avg = nan(1,N);
+        baseline = nan(1,N);
+        evoked = nan(1,N);
+        n_samp = nan(1,N);
+        for jj = 1:N
             codes = curr_pupil(jj).codesamples;
             start_idx = codes(find(codes(:,1)==targon_code,1),2) - 200;
             end_idx = codes(find(codes(:,1)==fixoff_code,1),2);
@@ -48,7 +48,6 @@ for sub=subjects
             n_samp(jj) = length(smoothed_trace); % number of pupil samples in the delay period
         end
         pupil.trial = trial;
-        pupil.avg_outlier = avg_outlier;
         pupil.avg = avg;
         pupil.baseline = baseline;
         pupil.evoked = evoked;
