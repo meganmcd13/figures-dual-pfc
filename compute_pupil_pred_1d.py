@@ -13,7 +13,7 @@ import helpers.pcca_fa.pcca_fa_mdl as pf
 
 subjects = getParams()['subjects']
 data_path = 'preprocessed_data/'
-CROSSVAL = True
+CROSSVAL = False
 
 dat = {}
 for sub in subjects:
@@ -27,6 +27,22 @@ for sub in subjects:
     fnames.remove('ar_order')
     fnames.remove('arr_spatial')
 
+    # check if pupil data is good - use 2x IQR to filter out outliers
+    ddof = 0
+    pupil_var = np.zeros(len(fnames))
+    for i_sess,sess in enumerate(fnames):
+        curr_dat = getattr(sub_dat,sess)
+        pupil_vals = getattr(curr_dat,'fast_component_pupil')
+        pupil_var[i_sess] = np.var(pupil_vals,ddof=ddof)
+    
+    thresh = 2
+    Q1 = np.percentile(pupil_var, 25)
+    Q3 = np.percentile(pupil_var, 75)
+    IQR = Q3 - Q1
+    pupil_mask = (pupil_var < (Q1 - thresh * IQR)) | (pupil_var > (Q3 + thresh * IQR))
+    fnames = [fn for i,fn in enumerate(fnames) if not pupil_mask[i]]
+ 
+    # compute pupil prediction for remaining sessions
     for i_sess,sess in enumerate(fnames,1):
         print('Getting pupil predictions for session: ', sess)
         # get spike data
