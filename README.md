@@ -6,13 +6,16 @@ Data processing and figure generation for the following reference:
 
 ## Setup
 
-This code suite requires the following packages, which should be placed inside the `helpers/` folder.
+This code suite requires the following package, which should be placed inside the `helpers/` folder. 
 
 - pCCA-FA: <https://github.com/SmithLabNeuro/pcca_fa>
+
+The pCCA-FA repository contains the following respositories as submodules. These repositories should be placed into the `helpers/pcca_fa/` folder as a part of the pCCA-FA package. See the pCCA-FA `README` for details.
+
 - FA: <https://github.com/meganmcd13/fa>
 - CCA: <https://github.com/meganmcd13/cca>
 
-The pCCA-FA package includes an `environment.yml` file, which should be used to create a conda environment from which to run this code suite.
+The pCCA-FA package also includes an `environment.yml` file, which should be used to create a conda environment from which to run this code suite.
 
 ## Data deposit
 
