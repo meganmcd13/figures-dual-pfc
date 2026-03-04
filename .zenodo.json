@@ -1,0 +1,42 @@
+{
+    "creators": [
+        {
+            "orcid": "0000-0002-6427-820X",
+            "affiliation": "Carnegie Mellon University",
+            "name": "McDonnell, Megan E."
+        },
+        {
+            "affiliation": "Carnegie Mellon University",
+            "name": "Umakantha, Akash"
+        },
+        {
+            "affiliation": "Carnegie Mellon University",
+            "name": "Williamson, Ryan C."
+        },
+        {
+            "orcid": "0000-0003-1192-9942",
+            "affiliation": "Carnegie Mellon University",
+            "name": "Smith, Matthew A."
+        },
+        {
+            "orcid": "0000-0003-2252-6938",
+            "affiliation": "Carnegie Mellon University",
+            "name": "Yu, Byron M."
+        }
+
+    ],
+
+    "license": "Apache-2.0",
+
+    "title": "Code from 'Interactions across hemispheres reflect global cognitive processing'",
+
+    "related_identifiers": [
+        {
+            "scheme": "doi",
+            "identifier": "10.1101/2025.06.12.659406",
+            "relation": "isDocumentedBy",
+            "resource_type": "publication-article"
+        }
+    ]
+
+}
