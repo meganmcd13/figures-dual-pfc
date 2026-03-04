@@ -4,6 +4,8 @@ Data processing and figure generation for the following reference:
 
 - McDonnell, M.E.&ast;, Umakantha, A.&ast;, Williamson, R.C.&ast;, Smith, M.A.&dagger;, & Yu, B. M.&dagger; Interactions across hemispheres in prefrontal cortex reflect global cognitive processing. bioRxiv (2025). <https://www.biorxiv.org/content/10.1101/2025.06.12.659406v1> (&ast; and &dagger; indicate equal contribution)
 
+M.E.M., A.U., & R.C.W. contributed equally to the authoriship of the code deposited here. Curation and repository was created by M.E.M.
+
 ## Setup
 
 This code suite requires the following package, which should be placed inside the `helpers/` folder. 
@@ -19,7 +21,7 @@ The pCCA-FA package also includes an `environment.yml` file, which should be use
 
 ## Data deposit
 
-The data used to generate these figures has been deposited in the following [repository](https://doi.org/10.5281/zenodo.15079270). The data files should be downloaded and placed in the `raw_data_forms/` folder.
+The data used to generate these figures has been deposited in the following [repository](https://doi.org/10.1184/R1/31431415). The data files from the `corr_sessions` folder should be downloaded and placed in the `raw_data_forms/` folder.
 
 ## Data preprocessing
 
