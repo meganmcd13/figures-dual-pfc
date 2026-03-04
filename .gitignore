@@ -7,3 +7,4 @@ figs/*
 raw_data_forms/*
 preprocessed_data/*
 helpers/*
+/.vscode
