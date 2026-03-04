@@ -1,4 +1,4 @@
-# -- Figure S3 simulated data --
+# -- Figure S2 simulated data --
 # Structured dimensionality: across > within, across = within, across < within
 # Model considerations:
     # 5-fold cross-validation, no warmstart
@@ -58,7 +58,7 @@ def run_vary_dim(n_trials):
             output_dict["est_params"].append(model.get_params())
 
             # save the results each iter
-            # save_dict(output_dict, save_name)
+            save_dict(output_dict, save_name)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

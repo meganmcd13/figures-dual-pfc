@@ -1,4 +1,4 @@
-# -- Figure S3 simulated data --
+# -- Figure 3 simulated data --
 # Structured trial counts: 100 - 2000
 # Model considerations:
     # 5-fold cross-validation, no warmstart

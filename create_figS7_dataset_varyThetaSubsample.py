@@ -1,4 +1,4 @@
-# -- Figure S7 simulated data --
+# -- Figure S9 simulated data --
 # Structured thetas: 0 - 90 deg
 # Model considerations:
     # no cross-validation, no warmstart

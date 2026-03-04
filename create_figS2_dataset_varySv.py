@@ -1,4 +1,4 @@
-# -- Figure S3 simulated data --
+# -- Figure S2 simulated data --
 # Structured sv: across > within, across = within, across < within
 # Model considerations:
     # 5-fold cross-validation, no warmstart
