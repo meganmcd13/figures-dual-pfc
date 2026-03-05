@@ -1,9 +1,11 @@
 # -- Figure S2 simulated data --
-# Structured sv: across > within, across = within, across < within
+# Structured sv:
+    # across > within
+    # across = within
+    # across < within
 # Model considerations:
     # 5-fold cross-validation, no warmstart
     
-# imports
 import numpy as np
 import sys, argparse, time
 
@@ -15,7 +17,7 @@ from dual_pfc_funcs import getBaseSimParams, save_dict
 # param initialization
 warmstart = False
 flat_eigs = True
-cv_list = np.arange(10) # dimensionalities to test in cross-validation
+cv_list = np.arange(10).astype(int) # dimensionalities to test in cross-validation
 
 p = getBaseSimParams()
 n1,n2 = p['n1'], p['n2']

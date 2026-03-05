@@ -1,5 +1,6 @@
 # -- Figure S9 simulated data --
-# Structured thetas: 0 - 90 deg
+# Structured thetas: 
+    # 0 - 90 deg
 # Model considerations:
     # no cross-validation, no warmstart
     
@@ -23,7 +24,7 @@ d,d1,d2 = p['d'], p['d1'], p['d2']
 n_boots = p['n_boots']
 sv_goal = p['sv_goal']
 
-## resample subpopulations of neurons
+# resample subpopulations of neurons
 theta_list = [0,30,60,90]
 base_params_list, sim_params_list, est_params_list = [], [], []
 n_full = 10000

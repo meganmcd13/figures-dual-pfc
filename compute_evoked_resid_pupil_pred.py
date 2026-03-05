@@ -1,4 +1,6 @@
-# -- Supplementary Figure 7 control --
+# -- Figure S10 control analysis --
+# perform regression onto residual event-related pupil after regressing out fast pupil component, using all co-fluctuation patterns of each type
+
 import sys
 import numpy as np
 import scipy.io as sio
@@ -23,7 +25,7 @@ for sub in subjects:
     # get pCCA-FA fits
     model_fits = load_dict(data_path + sub + '_pccafa_cv15dim.pkl')
 
-    # check if pupil data is good 
+    # check if pupil data is good - use 2x IQR to filter out outliers   
     ddof = 0
     pupil_var = np.zeros(len(fnames))
     for i_sess,sess in enumerate(fnames):
@@ -31,7 +33,6 @@ for sub in subjects:
         pupil_vals = getattr(curr_dat,'fast_component_pupil')
         pupil_var[i_sess] = np.var(pupil_vals,ddof=ddof)
 
-    # interquartile range
     thresh = 2
     Q1 = np.percentile(pupil_var, 25)
     Q3 = np.percentile(pupil_var, 75)

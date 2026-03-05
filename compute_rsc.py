@@ -1,9 +1,12 @@
+# -- Figure 2 analysis --
+# compute across- and within-area spike count correlations (rsc) and signal correlations
+
 import numpy as np
 import pandas as pd
 import scipy.io as sio
 
 # helper functions
-from dual_pfc_funcs import getParams, save_dict
+from dual_pfc_funcs import getParams, save_dict, zscWithinCond
 
 # find pairs of neurons across areas with significant signal tuning
 def getTuningCurves( X, conds ):
@@ -22,26 +25,6 @@ def getTuningCurves( X, conds ):
         tune_curves[:,i_cond] = np.mean(curr_counts,axis=1)
 
     return tune_curves
-
-# z-score counts within condition before computing rsc
-def zscWithinCond(X, conds):
-    # X is n_neurons x n_trials
-    import numpy as np
-    assert ~np.any(np.isnan(X)), 'Spike counts cannot be NaN'
-
-    cond_labels = np.unique(conds)
-    n_cond = len(cond_labels)    
-    X_zsc = np.full(X.shape,fill_value=np.nan)
-
-    for i_cond in range(n_cond):
-        cond_mask = conds == cond_labels[i_cond]
-        curr_counts = X[:,cond_mask]
-        cond_mean,cond_std = np.mean(curr_counts,axis=1), np.std(curr_counts,axis=1)
-        X_zsc[:,cond_mask] = ((curr_counts.T - cond_mean) / cond_std).T
-        if np.any((cond_std == 0) & (cond_mean == 0)):
-            chan_mask = np.where((cond_std == 0) & (cond_mean == 0))[0]
-            X_zsc[chan_mask,cond_mask] = 0
-    return X_zsc
 
 subjects = getParams()['subjects']
 

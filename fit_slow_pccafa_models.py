@@ -1,3 +1,6 @@
+# -- Figure S1 analysis --
+# fit pCCA-FA to slow component of neural activity
+
 import scipy.io as sio
 import numpy as np
 import sys

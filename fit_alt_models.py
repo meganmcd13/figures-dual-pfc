@@ -1,3 +1,6 @@
+# -- Figure S4 analysis --
+# fit alternative models (FA and pCCA) to same data as pCCA-FA
+
 import numpy as np
 import scipy.io as sio
 import sys
@@ -28,7 +31,6 @@ for sub in subjects:
     fnames.remove('arr_spatial')
 
     for i_sess,sess in enumerate(fnames,1):
-        # if sess in results.keys(): continue # skip previously completed sessions
         print('Crossvalidating {:s} ({} of {})...'.format(sess,i_sess,len(fnames)))
 
         # get data

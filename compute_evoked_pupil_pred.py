@@ -1,5 +1,6 @@
-# -- Figure 6 data --
-# create pupil latents
+# -- Figure S10 analysis --
+# perform regression onto event-related pupil using all co-fluctuation patterns of each type
+
 import sys
 import numpy as np
 import scipy.io as sio
@@ -63,7 +64,7 @@ for sub in subjects:
             'within-right': z['zx2_mu'],
         }
 
-        # get evoked pupil data
+        # get evoked / event-related pupil data
         evoked_peak = getattr(curr_dat.pupil,'evoked')
         evoked_baseline = getattr(curr_dat.pupil,'baseline')
         y_evoked = evoked_peak - evoked_baseline

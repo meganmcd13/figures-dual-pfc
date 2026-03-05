@@ -1,3 +1,6 @@
+# -- Figure S1 analysis --
+# fit pCCA-FA to flipped neural data, slow and fast components
+
 import scipy.io as sio
 import numpy as np
 import sys

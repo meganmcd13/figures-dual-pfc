@@ -1,3 +1,6 @@
+# -- MAIN analysis --
+# fit pCCA-FA to neural recordings
+
 import scipy.io as sio
 import sys, argparse, time
 

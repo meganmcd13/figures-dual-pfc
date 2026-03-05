@@ -1,10 +1,9 @@
 # -- Figure 3 simulated data --
-# Structured trial counts: 100 - 2000
+# Structured trial counts: 100 - 1500
 # Model considerations:
     # 5-fold cross-validation, no warmstart
     # also fit pCCA to compare in simulated data
     
-# imports
 import numpy as np
 import sys, time
 
@@ -16,7 +15,7 @@ from dual_pfc_funcs import getBaseSimParams, save_dict
 
 # param initialization
 flat_eigs = True
-cv_list = np.arange(15) # dimensionalities to test in cross-validation
+cv_list = np.arange(15).astype(int) # dimensionalities to test in cross-validation
 
 p = getBaseSimParams()
 n1,n2 = p['n1'], p['n2']

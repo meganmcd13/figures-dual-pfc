@@ -1,5 +1,6 @@
-# -- Figure 6 data --
-# create pupil latents
+# -- Figure 6 analysis --
+# perform regression onto trial-by-trial pupil using all top co-fluctuation patterns of each type
+
 import sys
 import numpy as np
 import scipy.io as sio
@@ -62,7 +63,7 @@ for sub in subjects:
             'within-right': z['zx2_mu'],
         }
 
-        # get pupil data, fast component
+        # get trial-by-trial pupil data
         pupil_vals = getattr(curr_dat,'fast_component_pupil')
         y = pupil_vals.reshape(-1,1)        
         

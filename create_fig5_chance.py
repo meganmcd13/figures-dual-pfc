@@ -1,13 +1,12 @@
-# -- Figure 5 chance distributions --
+# -- Figure 5 simulated data --
 # Structured thetas:
     # 30, 60, 90 deg
 # Random thetas:
     # uniform (45-90 deg)
 # Model considerations:
-    # no cross-validation, using params from real data, no warmstart
-    # manipulate each hemisphere individually, i.e., two sims per session
+    # no cross-validation, using params from neural recordings, no warmstart
+    # manipulate each area individually, i.e., two sims per session
     
-# imports
 import sys
 import numpy as np
 import scipy.io as sio
@@ -17,17 +16,17 @@ from dual_pfc_funcs import get_top_angle, getParams, save_dict, load_dict
 import helpers.pcca_fa.pcca_fa_mdl as pf
 import helpers.pcca_fa.sim_pcca_fa as spf
 
-# real data
+# parameters from neural recordings
 subjects = getParams()['subjects']
 data_path = 'preprocessed_data/'
 save_name = data_path + 'simdataset_varyThetaShuffle.pkl'
 
-# params
-np.random.seed(4) # to get good uniform thetas - somewhat arbitrary cherrypicking...
+# sim params
+np.random.seed(4) # to get reproducible uniform thetas
 NSIM = 42 # number of sessions
-thetas_struct = [30, 60, 90] # degrees, use same angle for both hemispheres
+thetas_struct = [30, 60, 90] # degrees, use same angle for both areas
 rand_low, rand_high = 45, 90
-thetas_rand = np.random.uniform(low=rand_low,high=rand_high,size=(NSIM,2)) # degrees, col 1 for left hem, col 2 for right hem
+thetas_rand = np.random.uniform(low=rand_low,high=rand_high,size=(NSIM,2)) # degrees, col 1 for area 1, col 2 for area 2
 
 results = {}
 for subject in subjects:
@@ -46,8 +45,8 @@ for subject in subjects:
 
         # get data
         curr_dat = getattr(dat,sess)
-        LH = getattr(curr_dat,'fast_component_left')
-        RH = getattr(curr_dat,'fast_component_right')
+        LH = getattr(curr_dat,'fast_component_left') # area 1
+        RH = getattr(curr_dat,'fast_component_right') # area 2
         n_trials = curr_dat.n_trials
         n1,n2 = LH.shape[1],RH.shape[1]
 
@@ -91,7 +90,7 @@ for subject in subjects:
         model.train(X_1,X_2,d,d1,d2,warmstart=False)
         fit_params = model.get_params()
     
-        # find estimated angles for hemisphere X
+        # find estimated angles for area 1
         x1_angle,_ = get_top_angle(fit_params)
         results[sess]['gt_rand_x1'] = thetas_rand[i_sess,0]
         results[sess]['fit_rand_x1'] = x1_angle
@@ -110,7 +109,7 @@ for subject in subjects:
         model.train(X_1,X_2,d,d1,d2,warmstart=False)
         fit_params = model.get_params()
     
-        # find estimated angles for hemisphere Y
+        # find estimated angles for area 2
         _, x2_angle = get_top_angle(fit_params)
         results[sess]['gt_rand_x2'] = thetas_rand[i_sess,1]
         results[sess]['fit_rand_x2'] = x2_angle

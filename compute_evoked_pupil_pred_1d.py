@@ -1,5 +1,6 @@
-# -- Figure 6 control analysis --
-# create pupil latents using top dimension only
+# -- Figure S10 control analysis --
+# perform regression onto event-related pupil using only top co-fluctuation pattern of each type
+
 import sys
 import numpy as np
 import scipy.io as sio
@@ -57,7 +58,7 @@ for sub in subjects:
         mdl.set_params(params)
         z,_ = mdl.estep(LH,RH)
 
-        # orthogonalize latents and select first dim
+        # orthogonalize latents and select first co-fluctuation pattern of each type
         z_orth,_ = mdl.orthogonalize_latents(z['zx1_mu'],z['zx2_mu'],do_across=True, z_mu=z['z_mu'], across_mode='paired')
         latents = {
             'across' : z_orth['z']['area1'][:,0,np.newaxis], # area 1 and 2 are the same if mode is paired
@@ -65,7 +66,7 @@ for sub in subjects:
             'within-right': z_orth['z2'][:,0,np.newaxis],
         }
 
-        # get evoked pupil data
+        # get evoked / event-related pupil data
         evoked_peak = getattr(curr_dat.pupil,'evoked')
         evoked_baseline = getattr(curr_dat.pupil,'baseline')
         y_evoked = evoked_peak - evoked_baseline
