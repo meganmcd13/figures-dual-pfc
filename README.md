@@ -1,6 +1,6 @@
 # Interactions across hemispheres in prefrontal cortex reflect global cognitive processing
 
-Data processing and figure generation for the following reference:
+Data analysis and figure generation for the following reference:
 
 - McDonnell, M.E.&ast;, Umakantha, A.&ast;, Williamson, R.C.&ast;, Smith, M.A.&dagger;, & Yu, B. M.&dagger; Interactions across hemispheres in prefrontal cortex reflect global cognitive processing. bioRxiv (2025). <https://www.biorxiv.org/content/10.1101/2025.06.12.659406v1> (&ast; and &dagger; indicate equal contribution)
 
@@ -32,25 +32,25 @@ The first preprocessing steps occur in MATLAB. The two following scripts should 
 
 The remaining steps take place in Python, using the conda environment created in the pCCA-FA package. `fit_pccafa_models.py` should be run first, and the remaining scripts can be run in any order. Each script is briefly described below.
 
-- `compute_evoked_pupil_pred.py` - main analysis for Supplementary Figure 8 to predict event-related pupil diameter using all co-fluctuation patterns
-- `compute_evoked_pupil_pred_1d.py` - control analysis for Supplementary Figure 8 to predict event-related pupil diameter using 1 co-fluctuation pattern
-- `compute_evoked_resid_pupil_pred.py` - control analysis for Supplementary Figure 8 to predict event-related pupil diameter using residual evoked pupil measure
+- `compute_evoked_pupil_pred.py` - main analysis for Supplementary Figure 10 to predict event-related pupil diameter using all co-fluctuation patterns
+- `compute_evoked_pupil_pred_1d.py` - control analysis for Supplementary Figure 10 to predict event-related pupil diameter using 1 co-fluctuation pattern
+- `compute_evoked_resid_pupil_pred.py` - control analysis for Supplementary Figure 10 to predict event-related pupil diameter using residual event-related pupil measure
 - `compute_pupil_pred.py` - main analysis for Figure 6 to predict pupil diameter using all co-fluctuation patterns
 - `compute_pupil_pred_1d.py` - control analysis for Figure 6 to predict pupil diameter using 1 co-fluctuation pattern
 - `compute_rsc.py` - main analysis for Figure 2 to compute across- and within-area $r_{sc}$ distributions and signal tuning
 - `create_fig3_dataset_varyN.py` - model validation simulations where number of trials is varied 
-- `create_fig5_chance.py` - control analysis for Figure 5 to fit pCCA-FA models to simulated data with a specified $\theta_{sim}$
-- `create_figS2_dataset_varyDim.py` - model validation simulations where dimensionality is varied 
-- `create_figS2_dataset_varySv.py` - model validation simulations where shared variance is varied 
-- `create_figS3_dataset_varyTheta.py` - model validation simulations where $\theta_{sim}$ is varied
-- `create_figS7_dataset_varyThetaSubsampe.py` - control analysis for Supplementary Figure 7 to fit pCCA-FA to datasets where neurons are subsampled
-- `dual_pfc_funcs.py` - file containing utilities used in various analyses, does not need to be run specifically
+- `create_fig5_dataset.py` - control analysis for Figure 5 to fit pCCA-FA models to simulated data with a specified $\theta_{sim}$
+- `create_figS2_dataset_varyDim.py` - model validation simulations for Supplementary Figure 2 where dimensionality is varied 
+- `create_figS2_dataset_varySv.py` - model validation simulations for Supplementary Figure 2 where shared variance is varied 
+- `create_figS3_dataset_varyTheta.py` - model validation simulations for Supplementary Figure 3 where $\theta_{sim}$ is varied
+- `create_figS9_dataset_varyThetaSubsampe.py` - control analysis for Supplementary Figure 9 to fit pCCA-FA to datasets where neurons are subsampled
+- `dual_pfc_funcs.py` - file containing utilities used in various analyses, does not need to be run
 - `fit_alt_models.py` - main analysis for Supplementary Figure 4 to compare pCCA-FA to alternative models
 - `fit_flip_pccafa_models.py` - control analysis for Supplementary Figure 1 to fit pCCA-FA to flipped neural activity
 - `fit_pccafa_models.py` - main script to fit pCCA-FA models to neural population activity, run first as noted above
 - `fit_shuffle_pccafa.py` - control analysis for Supplementary Fig 5 to fit pCCA-FA models to shuffled neurons
 - `fit_slow_pccafa_models.py` - analysis for Supplementary Figure 1 to fit pCCA-FA to the estimated slow components of neural activity
-- `fit_zsc_pccafa.py` - control analysis to fit pCCA-FA models to z-scored spike counts
+- `fit_zsc_pccafa.py` - control analysis for Figure 4 to fit pCCA-FA models to z-scored spike counts
 
 ## Figure generation
 
