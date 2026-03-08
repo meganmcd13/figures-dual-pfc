@@ -6,12 +6,13 @@ import numpy as np
 import scipy.io as sio
 from sklearn.linear_model import LinearRegression
 
-sys.path.append('helpers/pcca_fa/')
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
 from dual_pfc_funcs import load_dict, save_dict, getParams
-import helpers.pcca_fa.pcca_fa_mdl as pf
+import pcca_fa.pcca_fa_mdl as pf
 
 subjects = getParams()['subjects']
-data_path = 'preprocessed_data/'
+data_path = '../preprocessed_data/'
 
 dat = {}
 for sub in subjects:    

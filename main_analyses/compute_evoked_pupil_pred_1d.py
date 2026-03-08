@@ -8,12 +8,13 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import r2_score
 
-sys.path.append('helpers/pcca_fa/')
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
 from dual_pfc_funcs import load_dict, save_dict, getParams
-import helpers.pcca_fa.pcca_fa_mdl as pf
+import pcca_fa.pcca_fa_mdl as pf
 
 subjects = getParams()['subjects']
-data_path = 'preprocessed_data/'
+data_path = '../preprocessed_data/'
 CROSSVAL = False
 
 dat = {}
