@@ -6,13 +6,14 @@ import numpy as np
 import pandas as pd
 import sys, argparse, time
 
-sys.path.append('helpers/pcca_fa/')
-import helpers.pcca_fa.pcca_fa_mdl as pf
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import get_dlists, save_dict, zscWithinCond
 
 ar_order = 25
 max_dim = 15
-data_path = 'preprocessed_data/'
+data_path = '../preprocessed_data/'
 
 def main(subject):
     mat_fname = '{:s}/all_data_delay_{:s}.mat'.format(data_path, subject)
