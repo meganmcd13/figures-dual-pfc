@@ -2,15 +2,16 @@
 % take preprocessed all_data_delay_<sub> files and add pupil data to them
 
 clear; close all;
-addpath('helpers/')
+addpath('../helpers/')
 
 subjects = {'satchel', 'wakko', 'pepe'};
 
-data_dir = 'raw_data_forms/';
-save_dir = 'preprocessed_data/';
+data_dir = '../raw_data_forms/';
+save_dir = '../preprocessed_data/';
 
 % useful trial codes - Smith lab
 fixon_code = 2; targon_code = 70; targoff_code = 100; fixoff_code = 3;
+PRE_TO = 200; % ms of pupil data to take before target onset - for event-related baselining
 ar_order = 25; % length of trial window to subtract slow component
 
 % manual selection of peak of evoked response
@@ -23,13 +24,12 @@ for i_sub=1:length(subjects)
 
     % get all data 
     load(sprintf('%s/all_data_delay_%s.mat',save_dir,sub_str),'all_data');
-    load(sprintf('%s/behav_%s.mat',data_dir,sub_str)); % downsampled raw pupil traces
+    load(sprintf('%s/pupil_%s.mat',data_dir,sub_str)); % downsampled raw pupil traces
 
     n_pupil = length(behav);
 
     for ii = 1:n_pupil
         fprintf('Getting pupil responses for %s...\n',behav{ii}.sess_name(1:8));
-        pupil.scale = behav{ii}.pupil(1).scale;
 
         curr_pupil = behav{ii}.pupil;
 

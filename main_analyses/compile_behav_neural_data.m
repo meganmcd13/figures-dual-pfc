@@ -5,12 +5,12 @@
 % saves out all_data_delay_<sub>.mat
 
 clear; close all;
-addpath('helpers/')
+addpath('../helpers');
 
 subjects = {'satchel', 'wakko', 'pepe'};
 
-data_dir = 'raw_data_forms/';
-save_dir = 'preprocessed_data/';
+data_dir = '../raw_data_forms/';
+save_dir = '../preprocessed_data/';
 
 ar_order = 25; % length of trial window to subtract slow component
 for sub=subjects
