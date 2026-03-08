@@ -23,9 +23,9 @@ The pCCA-FA package also includes an `environment.yml` file, which should be use
 
 The data used to generate these figures has been deposited in the following [repository](https://doi.org/10.1184/R1/31431415). The data files from the `corr_sessions` folder should be downloaded and placed in the `raw_data_forms/` folder.
 
-## Data preprocessing
+## Data analysis
 
-The first preprocessing steps occur in MATLAB. The two following scripts should be run:
+All data analysis scripts for processing raw data forms are located in the `main_analyses` folder. To replicate the preprocessed data, these scripts should be run. The first preprocessing steps occur in MATLAB. The two following scripts should be run:
 
 1) `compile_behav_neural_data.m`
 2) `compile_pupil_data.m`
@@ -54,7 +54,7 @@ The remaining steps take place in Python, using the conda environment created in
 
 ## Figure generation
 
-The components of each figure can be reproduced using the respective Python notebook (`plot_figure<FIG>.ipynb`).
+After the data analysis scripts have been run, the components of each figure can be reproduced using the respective Python notebook (`plot_figure<FIG>.ipynb`).
 
 ## Contact
 
