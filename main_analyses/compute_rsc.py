@@ -38,7 +38,7 @@ within_area_right_dists = []
 across_area_dists = []
 for subject in subjects:
     # load all data to get counts
-    mat_fname = "preprocessed_data/all_data_delay_" + subject + ".mat"
+    mat_fname = '../preprocessed_data/all_data_delay_{}.mat'.format(subject)
     dat = sio.loadmat(mat_fname,squeeze_me=True,struct_as_record=False)['all_data']
     fnames = dat._fieldnames
     fnames.remove('arr_spatial')
@@ -133,8 +133,8 @@ dists_dict = {
     'WithinAreaRightRsc': within_area_right_dists,
     'AcrossAreaRsc': across_area_dists,
 }
-save_name = 'preprocessed_data/within_across_rsc_distributions.pkl'
+save_name = '../preprocessed_data/within_across_rsc_distributions.pkl'
 save_dict(dists_dict,save_name)
 
-save_name = 'preprocessed_data/within_across_rsc_means.pkl'
+save_name = '../preprocessed_data/within_across_rsc_means.pkl'
 df.to_pickle(save_name, compression='gzip')
