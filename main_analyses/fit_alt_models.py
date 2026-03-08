@@ -5,9 +5,10 @@ import numpy as np
 import scipy.io as sio
 import sys
 
-sys.path.append('helpers/pcca_fa/')
-import helpers.pcca_fa.fa.factor_analysis as fa
-import helpers.pcca_fa.cca.prob_cca as pcca
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.fa.factor_analysis as fa
+import pcca_fa.cca.prob_cca as pcca
 from dual_pfc_funcs import getParams, save_dict
 
 subjects = getParams()['subjects']
@@ -15,7 +16,7 @@ max_joint_dim = 30
 max_ind_dim = 20
 early_stop = False
 
-data_path = 'preprocessed_data/'
+data_path = '../preprocessed_data/'
 save_name = '{:s}/all_alt_mdls_cv.pkl'.format(data_path)
 print(f"Will save as {save_name}")
 
@@ -42,11 +43,6 @@ for sub in subjects:
         dmax = np.min([max_ind_dim, LH.shape[1], RH.shape[1]])
         ind_d_list = (np.arange(dmax)+1).astype(int)
 
-        # save useful dataset params
-        results[sess]["n_trials"] = LH.shape[0]
-        results[sess]["n_neurons_left"] = LH.shape[1]
-        results[sess]["n_neurons_right"] = RH.shape[1]
-
         # mdl 1: joint FA
         print('  Running Joint FA model...')
         joint_samples = np.concatenate((LH,RH),axis=1)
@@ -55,6 +51,7 @@ for sub in subjects:
         joint_LLs = cv_faMdl['LLs']
 
         # mdl 2: individual FA
+        print('  Running Individual FA model...')
         model_x1 = fa.factor_analysis(model_type='fa')
         cv_faMdl_x1 = model_x1.crossvalidate(LH,zDim_list=ind_d_list,early_stop=early_stop,rand_seed=i_sess,parallelize=True)
         LLs_x1 = cv_faMdl_x1['LLs']
@@ -64,11 +61,16 @@ for sub in subjects:
         LLs_x2 = cv_faMdl_x2['LLs']
 
         # mdl 3: pCCA
+        print('  Running pCCA model...')
         pcca_model = pcca.prob_cca()
         LLs_pcca = pcca_model.crossvalidate(LH,RH,zDim_list=ind_d_list,rand_seed=i_sess,parallelize=True,warmstart=False)
 
         # put cross-validation results into dict
         session_dict = {
+            "n_trials": LH.shape[0],
+            "n_neurons_left": LH.shape[1],
+            "n_neurons_right": RH.shape[1],
+
             "joint_fa":joint_model.get_params(),
             "joint_LL":joint_LLs,
 

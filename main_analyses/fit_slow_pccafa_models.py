@@ -5,13 +5,14 @@ import scipy.io as sio
 import numpy as np
 import sys
 
-sys.path.append('helpers/pcca_fa/')
-import helpers.pcca_fa.pcca_fa_mdl as pf
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import getParams, save_dict, load_dict
 
 subjects = subjects = getParams()['subjects']
-data_path = 'preprocessed_data/'
-save_name = '{:s}/slow_null_fits_0_25.pkl'.format(data_path)
+data_path = '../preprocessed_data/'
+save_name = '{:s}/slow_flip_fits.pkl'.format(data_path)
 print(f"Will save as {save_name}")
 
 results = {}
@@ -53,4 +54,4 @@ for sub in subjects:
         results[sess]['slow_flip_params'] = mdl.get_params()
 
         # save the results each iter
-        save_dict(results,save_name)
+        # save_dict(results,save_name)

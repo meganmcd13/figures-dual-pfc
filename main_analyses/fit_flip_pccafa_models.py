@@ -1,17 +1,18 @@
 # -- Figure S1 analysis --
-# fit pCCA-FA to flipped neural data, slow and fast components
+# fit pCCA-FA to flipped neural data, raw and fast components
 
 import scipy.io as sio
 import numpy as np
 import sys
 
-sys.path.append('helpers/pcca_fa/')
-import helpers.pcca_fa.pcca_fa_mdl as pf
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import getParams, save_dict, load_dict
 
 subjects = subjects = getParams()['subjects']
-data_path = 'preprocessed_data/'
-save_name = '{:s}/fast_null_fits_0_25.pkl'.format(data_path)
+data_path = '../preprocessed_data/'
+save_name = '{:s}/fast_flip_fits.pkl'.format(data_path)
 print(f"Will save as {save_name}")
     
 warmstart = True
