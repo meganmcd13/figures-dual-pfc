@@ -7,10 +7,11 @@
 import numpy as np
 import sys, time
 
-sys.path.append('helpers/pcca_fa/')
-import helpers.pcca_fa.sim_pcca_fa as spf
-import helpers.pcca_fa.pcca_fa_mdl as pf
-import helpers.pcca_fa.cca.prob_cca as pcca
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.sim_pcca_fa as spf
+import pcca_fa.pcca_fa_mdl as pf
+import pcca_fa.cca.prob_cca as pcca
 from dual_pfc_funcs import getBaseSimParams, save_dict
 
 # param initialization
@@ -27,7 +28,7 @@ n_folds = 5
 
 # vary number of trials
 def run_vary_N():
-    save_name = 'preprocessed_data/simdataset_varyN_noWS.pkl'
+    save_name = '../preprocessed_data/simdataset_varyN_noWS.pkl'
     print('Will save as {}'.format(save_name))
 
     output_dict = {

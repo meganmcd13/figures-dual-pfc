@@ -11,14 +11,15 @@ import sys
 import numpy as np
 import scipy.io as sio
 
-sys.path.append('helpers/pcca_fa/')
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
 from dual_pfc_funcs import get_top_angle, getParams, save_dict, load_dict
-import helpers.pcca_fa.pcca_fa_mdl as pf
-import helpers.pcca_fa.sim_pcca_fa as spf
+import pcca_fa.pcca_fa_mdl as pf
+import pcca_fa.sim_pcca_fa as spf
 
 # parameters from neural recordings
 subjects = getParams()['subjects']
-data_path = 'preprocessed_data/'
+data_path = '../preprocessed_data/'
 save_name = data_path + 'simdataset_varyThetaShuffle.pkl'
 
 # sim params
@@ -74,14 +75,6 @@ for subject in subjects:
         simulator.apply_rotation(thetas_rand[i_sess,0],hem='1')
         tmp,_ = get_top_angle(simulator.get_params())
         assert(np.isclose(tmp,thetas_rand[i_sess,0],rtol=1e-5))
-
-        new_params = simulator.get_params().copy()
-        mdl = pf.pcca_fa()
-        mdl.set_params(new_params)
-        psv_rot = mdl.compute_psv()
-        shared_within_x1_new = np.diag(new_params['L_1'] @ new_params['L_1'].T)
-        print('  %sv across: {:.2f}, %sv within: {:.2f}'.format(psv_gt['avg_psv_W_1'], psv_gt['avg_psv_L_1']))
-        print('  ROTATED %sv across: {:.2f}, %sv within: {:.2f}'.format(psv_rot['avg_psv_W_1'], psv_rot['avg_psv_L_1']))
 
         X_1,X_2 = simulator.sim_data(n_trials)
     

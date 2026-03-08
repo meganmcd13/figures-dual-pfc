@@ -9,10 +9,11 @@ from tqdm import tqdm
 import sys
 import numpy as np
 
-sys.path.append('helpers/pcca_fa/')
+sys.path.append('../helpers/')
+sys.path.append('../helpers/pcca_fa/')
+import pcca_fa.sim_pcca_fa as spf
+import pcca_fa.pcca_fa_mdl as pf
 from dual_pfc_funcs import save_dict, getBaseSimParams
-import helpers.pcca_fa.sim_pcca_fa as spf
-import helpers.pcca_fa.pcca_fa_mdl as pf
 
 # param initialization
 warmstart = False
@@ -105,5 +106,5 @@ output_dict = {
     "est_params":est_params_list,
 }
 
-save_name = 'preprocessed_data/simdataset_varyThetaSubsample.pkl'
+save_name = '../preprocessed_data/simdataset_varyThetaSubsample.pkl'
 save_dict(output_dict, save_name)
