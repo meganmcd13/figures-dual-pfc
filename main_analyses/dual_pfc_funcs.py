@@ -112,7 +112,7 @@ def get_top_angle(params,across_mode='cov'):
     # params is a parameter dictionary returned by pCCA-FA model
     # across_mode ('cov' or 'corr') indicates whether to get top covariate mode or correlative mode of W
     import scipy.linalg as slin
-    import pcca_fa.pcca_fa_mdl as pf
+    import helpers.pcca_fa.pcca_fa_mdl as pf
 
     mdl = pf.pcca_fa()
     mdl.set_params(params)
