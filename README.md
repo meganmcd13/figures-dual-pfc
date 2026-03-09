@@ -1,5 +1,7 @@
 # Interactions across hemispheres in prefrontal cortex reflect global cognitive processing
 
+[![DOI](https://zenodo.org/badge/722185277.svg)](https://doi.org/10.5281/zenodo.18929015)
+
 Data analysis and figure generation for the following reference:
 
 - McDonnell, M.E.&ast;, Umakantha, A.&ast;, Williamson, R.C.&ast;, Smith, M.A.&dagger;, & Yu, B. M.&dagger; Interactions across hemispheres in prefrontal cortex reflect global cognitive processing. bioRxiv (2025). <https://www.biorxiv.org/content/10.1101/2025.06.12.659406v1> (&ast; and &dagger; indicate equal contribution)
